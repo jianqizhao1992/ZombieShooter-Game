@@ -45,3 +45,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/Binaries/Win64
+/Saved
+/Intermediate
+/Content
+/Config
+/Build
+/.vs/ZombieShooter/v14
+*.opensdf
+*.sdf
+*.suo
