@@ -48,14 +48,8 @@ Temporary Items
 /Binaries/Win64
 /Saved
 /Intermediate
-/Config
 /Build
 /.vs/ZombieShooter/v14
 *.opensdf
 *.sdf
 *.suo
-/Content/StarterContent
-/Content/Material
-/Content/Maps
-/Content/FPWeapon
-/Content/AnimationAssets
