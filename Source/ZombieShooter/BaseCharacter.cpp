@@ -14,6 +14,15 @@ ABaseCharacter::ABaseCharacter()
 	GunTempLoc = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLoc"), false);
 	GunTempLoc->AttachTo(this->GetMesh());
 
+	// Set up UMeshComponent for first person and attach to 'root'
+	MeshFirstPerson = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshFirstPerson"), false);
+	MeshFirstPerson->AttachTo(RootComponent);
+
+	// Set up temp gun location for first person and attach to root
+	GunTempLocFirstPerson = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLocFirstPerson"), false);
+	GunTempLocFirstPerson->AttachTo(MeshFirstPerson);
+
+
 	// Find the class to Gun blueprint
 	static ConstructorHelpers::FObjectFinder<UBlueprint> GunBlueprintRaw(TEXT("Blueprint'/Game/Blueprints/Gun.Gun'"));
 	if (GunBlueprintRaw.Object) {
@@ -28,13 +37,25 @@ void ABaseCharacter::BeginPlay()
 
 	if (this->isHero)
 	{
+		/* Create Gun Blueprint instances and attach to GunSpawnPoint */
 		const FTransform GunSpawnPoint = this->GunTempLoc->GetComponentTransform();
 		GunBlueprintInstance = GetWorld()->SpawnActor(GunBlueprintClass, &GunSpawnPoint);
+
+		const FTransform GunSpawnPointFirstPerson = this->GunTempLocFirstPerson->GetComponentTransform();
+		GunBlueprintInstanceFirstPerson = GetWorld()->SpawnActor(GunBlueprintClass, &GunSpawnPointFirstPerson);
 		
 		//GunBlueprintInstance->AttachRootComponentTo(this->GunTempLoc, NAME_None, EAttachLocation::SnapToTarget);
 		GunBlueprintInstance->AttachRootComponentTo(GetMesh(), TEXT("Gun_socket"), EAttachLocation::SnapToTarget);
 
+		GunBlueprintInstanceFirstPerson->AttachRootComponentTo(MeshFirstPerson, TEXT("Gun_socket_first_person"), EAttachLocation::SnapToTarget);
+
+		MeshFirstPerson->SetVisibility(false, true);
+
 		this->GunBlueprintAWeaponInstance = (AWeapon *)GunBlueprintInstance;
+
+		/* Assign player controller*/
+		PControl = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		PControl->bShowMouseCursor = true;
 	}
 }
 
@@ -50,9 +71,12 @@ void ABaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompo
 	check(InputComponent);
 	InputComponent->BindAxis("MoveUp", this, &ABaseCharacter::MoveUp);
 	InputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
-	InputComponent->BindAxis("MoveCursor", this, &ABaseCharacter::MoveCursor);
+	//InputComponent->BindAxis("MoveCursor", this, &ABaseCharacter::MoveCursor);
+	InputComponent->BindAxis("LookRight", this, &ABaseCharacter::MoveCursorRight);
+	InputComponent->BindAxis("LookUp", this, &ABaseCharacter::MoveCursorUp);
 	InputComponent->BindAction("PullTrigger", IE_Pressed, this, &ABaseCharacter::PullTrigger);
 	InputComponent->BindAction("ReleaseTrigger", IE_Released, this, &ABaseCharacter::ReleaseTrigger);
+	InputComponent->BindAction("ToggleCamera", IE_Pressed, this, &ABaseCharacter::ToggleCamera);
 
 }
 
@@ -91,7 +115,12 @@ void ABaseCharacter::MoveUp(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
-		AddMovementInput(FVector::ForwardVector, Value);	
+		if(HighCameraActive)
+			AddMovementInput(FVector::ForwardVector, Value);	
+		else
+		{
+			AddMovementInput(this->GetActorForwardVector(), Value);
+		}
 	}
 }
 
@@ -99,13 +128,27 @@ void ABaseCharacter::MoveRight(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
-		AddMovementInput(FVector::RightVector, Value);
+		if(HighCameraActive)
+			AddMovementInput(FVector::RightVector, Value);
+		else
+		{
+			AddMovementInput(this->GetActorRightVector(), Value);
+		}
 	}
 }
 
-void ABaseCharacter::MoveCursor(float Value)
+void ABaseCharacter::MoveCursorRight(float Value)
 {
-	RotateCharacter();
+	if (HighCameraActive)
+		RotateCharacter();
+	else
+		this->AddControllerYawInput(Value);
+}
+
+void ABaseCharacter::MoveCursorUp(float Value)
+{
+	if(HighCameraActive)
+		RotateCharacter();
 }
 
 void ABaseCharacter::PullTrigger_Implementation()
@@ -141,12 +184,40 @@ bool ABaseCharacter::FireGun_Validate()
 	return true;
 }
 
+void ABaseCharacter::SwitchCamera(UActorComponent*& Camera1, UActorComponent*& Camera2)
+{
+	if(HighCameraActive) {
+		Camera1->SetActive(false);
+		Camera2->SetActive(true);
+		HighCameraActive = false;
+		PControl->bShowMouseCursor = false;
+	}
+	else {
+		Camera1->SetActive(true);
+		Camera2->SetActive(false);
+		HighCameraActive = true;
+		PControl->bShowMouseCursor = true;
+	}
+}
+
+void ABaseCharacter::SwitchGun()
+{
+	if (HighCameraActive)
+	{
+		this->GunBlueprintAWeaponInstance = (AWeapon *)GunBlueprintInstance;
+	}
+	else
+	{
+		this->GunBlueprintAWeaponInstance = (AWeapon *)GunBlueprintInstanceFirstPerson;
+	}
+}
+
 void ABaseCharacter::RotateCharacter()
 {
 	float CursorX = 0;
 	float CursorY = 0;
-	auto PControl = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	PControl->bShowMouseCursor = true;
+	//auto PControl = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//PControl->bShowMouseCursor = true;
 	PControl->GetMousePosition(CursorX, CursorY);
 	FVector CursorLocation = FVector(CursorX, CursorY, 0);
 	
@@ -155,6 +226,7 @@ void ABaseCharacter::RotateCharacter()
 
 	FRotator Rot = FRotationMatrix::MakeFromZ(CursorLocation - ActorScreenLocation).Rotator();
 	Controller->SetControlRotation(Rot);
+
 }
 
 #if WITH_EDITOR

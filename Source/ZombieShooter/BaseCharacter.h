@@ -22,13 +22,23 @@ class ZOMBIESHOOTER_API ABaseCharacter : public ACharacter, public ICharacterDam
 	UPROPERTY(VisibleAnywhere, Category = "Base Character")
 	AActor *GunBlueprintInstance;
 
+	// Set up pointer to Gun blueprint instance for First Person
+	UPROPERTY(VisibleAnywhere, Category = "Base Character")
+	AActor *GunBlueprintInstanceFirstPerson;
+
 	UPROPERTY(VisibleAnywhere, Category = "Base Character")
 	AWeapon *GunBlueprintAWeaponInstance;
+
+	/* Pointer to player controller */
+	APlayerController *PControl = NULL;
 
 	FTimerHandle FireTimeHandle;
 	FTimerHandle DeadDelayTimeHandle;
 
 public:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
+	bool HighCameraActive = true;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
 	float Health = 100;
@@ -44,6 +54,16 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
 	UArrowComponent *GunTempLoc;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
+	UArrowComponent *GunTempLocFirstPerson;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
+	USkeletalMeshComponent *MeshFirstPerson;
+
+	/** AnimMontage to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class UAnimMontage* FireAnimation;
 
 	virtual void CalculateDead();
 
@@ -78,7 +98,9 @@ public:
 
 	void MoveRight(float Value);
 
-	void MoveCursor(float Value);
+	void MoveCursorRight(float Value);
+
+	void MoveCursorUp(float Value);
 
 	UFUNCTION(Server, reliable, WithValidation)
 	void PullTrigger();
@@ -88,6 +110,15 @@ public:
 
 	UFUNCTION(Server, reliable, WithValidation)
 	void FireGun();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Base Character")
+	void ToggleCamera();
+
+	UFUNCTION(BlueprintCallable, Category = "Base Character")
+	void SwitchCamera(UPARAM(ref) UActorComponent*& Camera1, UPARAM(ref) UActorComponent*& Camera2);
+
+	UFUNCTION(BlueprintCallable, Category = "Base Character")
+	void SwitchGun();
 
 	void RotateCharacter();
 
