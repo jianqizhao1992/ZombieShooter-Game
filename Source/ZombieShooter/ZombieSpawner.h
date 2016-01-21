@@ -15,8 +15,9 @@ class ZOMBIESHOOTER_API AZombieSpawner : public AActor
 	USceneComponent *ZombieSpawnRootComponent;
 
 public:	
-	// Declare ZombieBlueprintClass
-	UClass *ZombieBlueprintClass;
+	// Connect to ZombieBlueprintClass
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ZombieSpawner")
+	class UClass *ZombieBlueprintClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ZombieSpawner")
 	UBoxComponent *SpawnVolume;

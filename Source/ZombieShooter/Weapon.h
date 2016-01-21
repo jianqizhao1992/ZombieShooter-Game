@@ -13,9 +13,6 @@ class ZOMBIESHOOTER_API AWeapon : public AActor
 
 	// Set up weapon root
 	USceneComponent *WeaponRoot;
-
-	// Set up projectile blueprint pointer
-	UClass *ProjectileBlueprintClass;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -30,6 +27,10 @@ public:
 	// Spawn projectile
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void Fire();
+
+	// Set up project blueprint pointer
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	class UClass *ProjectileBlueprintClass;
 
 	// Set up projectile spawn point
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")

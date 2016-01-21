@@ -11,9 +11,15 @@ class ZOMBIESHOOTER_API APickup : public AActor
 	GENERATED_BODY()
 	
 public:	
-	/* Create root component */
+	/* Root component */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup")
 	USceneComponent *PickupRoot;
+
+	/* Mesh component */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	UStaticMeshComponent *PickupMesh;
+
+	/* */
 
 	/* Create collision sphere and attach to the root */
 

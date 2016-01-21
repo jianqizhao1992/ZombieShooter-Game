@@ -18,12 +18,6 @@ AZombieSpawner::AZombieSpawner()
 	SpawnVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"), false);
 	SpawnVolume->AttachTo(ZombieSpawnRootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ZombieBlueprintRaw(TEXT("Blueprint'/Game/Blueprints/ZombieCharacter.ZombieCharacter'"));
-	if (ZombieBlueprintRaw.Object) {
-		ZombieBlueprintClass = (UClass *)ZombieBlueprintRaw.Object->GeneratedClass;
-	}
-
-	
 }
 
 // Called when the game starts or when spawned

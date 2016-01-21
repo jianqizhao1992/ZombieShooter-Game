@@ -23,11 +23,6 @@ AWeapon::AWeapon()
 	ProjectileSpawnPoint = AWeapon::CreateDefaultSubobject<UArrowComponent>(TEXT("ProjectileSpawnPoint"), false);
 	ProjectileSpawnPoint->AttachTo(GunMesh);
 
-	// Find Projectile Blueprint class
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ProjectileBlueprintRaw(TEXT("Blueprint'/Game/Blueprints/ProjectileBlueprint.ProjectileBlueprint'"));
-	if (ProjectileBlueprintRaw.Object) {
-		ProjectileBlueprintClass = (UClass *)ProjectileBlueprintRaw.Object->GeneratedClass;
-	}
 }
 
 // Called when the game starts or when spawned

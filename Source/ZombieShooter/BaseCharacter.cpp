@@ -22,12 +22,6 @@ ABaseCharacter::ABaseCharacter()
 	GunTempLocFirstPerson = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLocFirstPerson"), false);
 	GunTempLocFirstPerson->AttachTo(MeshFirstPerson);
 
-
-	// Find the class to Gun blueprint
-	static ConstructorHelpers::FObjectFinder<UBlueprint> GunBlueprintRaw(TEXT("Blueprint'/Game/Blueprints/Gun.Gun'"));
-	if (GunBlueprintRaw.Object) {
-		GunBlueprintClass = (UClass *)GunBlueprintRaw.Object->GeneratedClass;
-	}
 }
 
 // Called when the game starts or when spawned

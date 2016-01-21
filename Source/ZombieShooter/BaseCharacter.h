@@ -15,9 +15,6 @@ class ZOMBIESHOOTER_API ABaseCharacter : public ACharacter, public ICharacterDam
 {
 	GENERATED_BODY()
 
-	// Set up Gun blueprint class pointer
-	UClass *GunBlueprintClass;
-
 	// Set up pointer to Gun blueprint instance
 	UPROPERTY(VisibleAnywhere, Category = "Base Character")
 	AActor *GunBlueprintInstance;
@@ -64,6 +61,10 @@ public:
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	class UAnimMontage* FireAnimation;
+
+	// Set up Gun blueprint class pointer
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	class UClass *GunBlueprintClass;
 
 	virtual void CalculateDead();
 
@@ -121,6 +122,7 @@ public:
 	void SwitchGun();
 
 	void RotateCharacter();
+
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
