@@ -18,6 +18,10 @@ APickup::APickup()
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickupMesh"), false);
 	PickupMesh->AttachTo(RootComponent);
 
+	/* Initialize sphere collision component and attach it to RootComponent */
+	PickupCollision = CreateDefaultSubobject<USphereComponent>(TEXT("PickupCollision"), false);
+	PickupCollision->AttachTo(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -33,4 +37,6 @@ void APickup::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 
 }
+
+
 

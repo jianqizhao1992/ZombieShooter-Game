@@ -77,6 +77,10 @@ void ABaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompo
 void ABaseCharacter::CalculateHealth(float Delta)
 {
 	Health += Delta;
+	if (Health > 100)
+		Health = 100;
+	if (Health < 0)
+		Health = 0;
 	CalculateDead();
 }
 
@@ -227,7 +231,6 @@ void ABaseCharacter::RotateCharacter()
 void ABaseCharacter::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	isDead = false;
-	Health = 100;
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 

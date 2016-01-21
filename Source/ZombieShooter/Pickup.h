@@ -19,9 +19,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
 	UStaticMeshComponent *PickupMesh;
 
-	/* */
+	/* Collision sphere component */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	USphereComponent *PickupCollision;
 
-	/* Create collision sphere and attach to the root */
+	/* Effective flag */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+	bool isEffective = true;
 
 	// Sets default values for this actor's properties
 	APickup();
@@ -31,7 +35,4 @@ public:
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
-
-	
-	
 };
