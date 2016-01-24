@@ -76,6 +76,9 @@ public:
 	virtual void CalculateHealth(float delta);
 
 	UFUNCTION(BlueprintCallable, Category = "Base Character")
+	virtual void CalculateAmmo(float delta);
+
+	UFUNCTION(BlueprintCallable, Category = "Base Character")
 	float GetCharacterLocationX();
 
 	UFUNCTION(BlueprintCallable, Category = "Base Character")

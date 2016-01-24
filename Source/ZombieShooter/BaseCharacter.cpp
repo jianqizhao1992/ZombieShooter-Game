@@ -84,6 +84,15 @@ void ABaseCharacter::CalculateHealth(float Delta)
 	CalculateDead();
 }
 
+void ABaseCharacter::CalculateAmmo(float Delta)
+{
+	EnergyLevel += Delta;
+	if (EnergyLevel > 100)
+		EnergyLevel = 100;
+	if (EnergyLevel < 0)
+		EnergyLevel = 0;
+}
+
 void ABaseCharacter::CalculateDead()
 {
 	if (Health <= 0)
