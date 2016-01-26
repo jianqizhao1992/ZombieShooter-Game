@@ -5,7 +5,7 @@ This project is based on Unreal 4 Tutorial "Twin Stick Shooter", which was imple
 
 Some Features added:
 1. Multiplayer mode.
-2. View Swith (keyboard: c)
+2. View Switch (keyboard: c)
 
 To run this game:
 1. Clone the project to local machine.
