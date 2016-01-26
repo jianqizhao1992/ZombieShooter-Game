@@ -7,7 +7,9 @@ Some Features added:
 1. Multiplayer mode.
 2. View Switch (keyboard: c)
 3. Item Pickup (health, ammo)
-4. 
+
+
+
 To run this game:
 1. Clone the project to local machine.
 2. Install Unreal Engine 4 (tested on version 4.10.1) on your computer.
