@@ -48,7 +48,7 @@ void AZombieSpawner::SpawnSingleZombie()
 {
 	TArray<AActor*> ZombieArray;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ZombieBlueprintClass, ZombieArray);
-	if (ZombieArray.Num() < 5)
+	if (ZombieArray.Num() < MaxZombieNum)
 	{
 		FVector ZombieSpawnLocation = UKismetMathLibrary::RandomPointInBoundingBox(ZombieBoxSpawnLocation, ZombieBoxSpawnExtent);
 		auto ZombieInstance = GetWorld()->SpawnActor(ZombieBlueprintClass, &ZombieSpawnLocation);

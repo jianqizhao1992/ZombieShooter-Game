@@ -51,7 +51,7 @@ void AProjectile::OnProjectileOverlapBegin(class AActor* OtherActor, class UPrim
 		if (OtherActor->GetClass()->ImplementsInterface(UCharacterDamageInterface::StaticClass()))
 		{
 			ICharacterDamageInterface *InterfaceActor = Cast<ICharacterDamageInterface>(OtherActor);
-			InterfaceActor->ReceiveDamage();
+			InterfaceActor->ReceiveDamage(ProjectileDamage);
 			//UKismetSystemLibrary::PrintString(GetWorld(), TEXT("shot"));
 		}
 	}

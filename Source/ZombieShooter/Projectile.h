@@ -14,6 +14,9 @@ class ZOMBIESHOOTER_API AProjectile : public AActor
 protected:
 	UPROPERTY()
 	USceneComponent *ProjectileRoot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	float ProjectileDamage = 20;
 	
 public:	
 	// Sets default values for this actor's properties

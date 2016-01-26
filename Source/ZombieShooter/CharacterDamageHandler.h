@@ -16,5 +16,5 @@ class ICharacterDamageInterface
 
 public:
 	//UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Base Character")
-	virtual void ReceiveDamage();
+	virtual void ReceiveDamage(float Damage);
 };

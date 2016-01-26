@@ -96,18 +96,24 @@ void ABaseCharacter::CalculateDead()
 		isDead = true;
 	else
 		isDead = false;
+	if (isDead)
+		DestroyCharacter();
 }
 
-void ABaseCharacter::ReceiveDamage()
+void ABaseCharacter::ReceiveDamage(float Damage)
+{
+	if (!isDead)
+	{
+		Health -= Damage;
+	}
+	CalculateDead();
+}
+
+void ABaseCharacter::DestroyCharacter()
 {
 	isDead = true;
-	if (Controller != NULL)
-	{
-		Controller->Destroy();
-	}
 	this->SetActorEnableCollision(false);
 	GetWorld()->GetTimerManager().SetTimer(DeadDelayTimeHandle, this, &ABaseCharacter::DestroyActor, 1.0f, false, 1.5f);
-	//this->Destroy();
 }
 
 void ABaseCharacter::DestroyActor()

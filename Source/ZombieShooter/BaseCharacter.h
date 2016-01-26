@@ -61,7 +61,10 @@ public:
 
 	virtual void CalculateDead();
 
-	virtual void ReceiveDamage();
+	virtual void DestroyCharacter();
+
+	UFUNCTION(BlueprintCallable, Category = "Base Character")
+	virtual void ReceiveDamage(float Damage);
 
 	void DestroyActor();
 

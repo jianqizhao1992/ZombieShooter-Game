@@ -28,6 +28,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ZombieSpawner")
 	FVector ZombieBoxSpawnLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ZombieSpawner")
+	uint8 MaxZombieNum;
+
 	// Sets default values for this actor's properties
 	AZombieSpawner();
 

@@ -7,7 +7,7 @@ UCharacterDamageInterface::UCharacterDamageInterface(const FObjectInitializer& O
 {
 }
 
-void ICharacterDamageInterface::ReceiveDamage()
+void ICharacterDamageInterface::ReceiveDamage(float Damage)
 {
 	
 }
