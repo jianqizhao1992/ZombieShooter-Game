@@ -15,16 +15,17 @@ class ZOMBIESHOOTER_API ABaseCharacter : public ACharacter, public ICharacterDam
 {
 	GENERATED_BODY()
 
+public:
 	// Set up pointer to Gun blueprint instance
-	UPROPERTY(VisibleAnywhere, Category = "Base Character")
-	AActor *GunBlueprintInstance;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Character Weapon")
+	AActor *GunBlueprintInstanceThirdPerson;
 
 	// Set up pointer to Gun blueprint instance for First Person
-	UPROPERTY(VisibleAnywhere, Category = "Base Character")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Character Weapon")
 	AActor *GunBlueprintInstanceFirstPerson;
 
-	UPROPERTY(VisibleAnywhere, Category = "Base Character")
-	AWeapon *GunBlueprintAWeaponInstance;
+	UPROPERTY(VisibleAnywhere, Category = "Character Weapon")
+	AWeapon *CurrentAWeaponInstance;
 
 	/* Pointer to player controller */
 	APlayerController *PControl = NULL;
@@ -32,28 +33,20 @@ class ZOMBIESHOOTER_API ABaseCharacter : public ACharacter, public ICharacterDam
 	FTimerHandle FireTimeHandle;
 	FTimerHandle DeadDelayTimeHandle;
 
-public:
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Character Status")
 	bool HighCameraActive = true;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Character Status")
 	float Health = 100;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Base Character")
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Character Status")
 	bool isDead = false;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Character Status")
 	bool isHero = false;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, replicated, Category = "Base Character")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, replicated, Category = "Character Status")
 	float EnergyLevel = 100;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
-	UArrowComponent *GunTempLoc;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
-	UArrowComponent *GunTempLocFirstPerson;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Base Character")
 	USkeletalMeshComponent *MeshFirstPerson;
@@ -84,11 +77,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Base Character")
 	float GetCharacterLocationY();
 
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent) override;
-#endif
-
-public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
@@ -126,6 +114,9 @@ public:
 
 	void RotateCharacter();
 
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent) override;
+#endif
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;

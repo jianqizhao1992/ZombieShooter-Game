@@ -11,16 +11,16 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Set up temp gun location and attach to root
-	GunTempLoc = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLoc"), false);
-	GunTempLoc->AttachTo(this->GetMesh());
+	//GunTempLoc = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLoc"), false);
+	//GunTempLoc->AttachTo(this->GetMesh());
 
 	// Set up UMeshComponent for first person and attach to 'root'
 	MeshFirstPerson = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshFirstPerson"), false);
 	MeshFirstPerson->AttachTo(RootComponent);
 
 	// Set up temp gun location for first person and attach to root
-	GunTempLocFirstPerson = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLocFirstPerson"), false);
-	GunTempLocFirstPerson->AttachTo(MeshFirstPerson);
+	//GunTempLocFirstPerson = CreateDefaultSubobject<UArrowComponent>(TEXT("GunTempLocFirstPerson"), false);
+	//GunTempLocFirstPerson->AttachTo(MeshFirstPerson);
 
 }
 
@@ -31,21 +31,18 @@ void ABaseCharacter::BeginPlay()
 
 	if (this->isHero)
 	{
-		/* Create Gun Blueprint instances and attach to GunSpawnPoint */
-		const FTransform GunSpawnPoint = this->GunTempLoc->GetComponentTransform();
-		GunBlueprintInstance = GetWorld()->SpawnActor(GunBlueprintClass, &GunSpawnPoint);
 
-		const FTransform GunSpawnPointFirstPerson = this->GunTempLocFirstPerson->GetComponentTransform();
-		GunBlueprintInstanceFirstPerson = GetWorld()->SpawnActor(GunBlueprintClass, &GunSpawnPointFirstPerson);
+		const FVector TempSpawnLocation = GetActorLocation();
+
+		GunBlueprintInstanceThirdPerson = GetWorld()->SpawnActor(GunBlueprintClass, &TempSpawnLocation);
+		GunBlueprintInstanceThirdPerson->AttachRootComponentTo(GetMesh(), TEXT("Gun_socket"), EAttachLocation::SnapToTarget);
 		
-		//GunBlueprintInstance->AttachRootComponentTo(this->GunTempLoc, NAME_None, EAttachLocation::SnapToTarget);
-		GunBlueprintInstance->AttachRootComponentTo(GetMesh(), TEXT("Gun_socket"), EAttachLocation::SnapToTarget);
-
+		GunBlueprintInstanceFirstPerson = GetWorld()->SpawnActor(GunBlueprintClass, &TempSpawnLocation);
 		GunBlueprintInstanceFirstPerson->AttachRootComponentTo(MeshFirstPerson, TEXT("Gun_socket_first_person"), EAttachLocation::SnapToTarget);
 
 		MeshFirstPerson->SetVisibility(false, true);
 
-		this->GunBlueprintAWeaponInstance = (AWeapon *)GunBlueprintInstance;
+		this->CurrentAWeaponInstance = (AWeapon *)GunBlueprintInstanceThirdPerson;
 
 		/* Assign player controller*/
 		PControl = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -181,7 +178,7 @@ bool ABaseCharacter::ReleaseTrigger_Validate()
 void ABaseCharacter::FireGun_Implementation()
 {
 	if (EnergyLevel > 0) {
-		this->GunBlueprintAWeaponInstance->Fire();
+		this->CurrentAWeaponInstance->Fire();
 		EnergyLevel--;
 	}
 }
@@ -211,11 +208,11 @@ void ABaseCharacter::SwitchGun()
 {
 	if (HighCameraActive)
 	{
-		this->GunBlueprintAWeaponInstance = (AWeapon *)GunBlueprintInstance;
+		this->CurrentAWeaponInstance = (AWeapon *)GunBlueprintInstanceThirdPerson;
 	}
 	else
 	{
-		this->GunBlueprintAWeaponInstance = (AWeapon *)GunBlueprintInstanceFirstPerson;
+		this->CurrentAWeaponInstance = (AWeapon *)GunBlueprintInstanceFirstPerson;
 	}
 }
 
